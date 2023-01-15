@@ -4,13 +4,14 @@ services:
     image: mysql:latest
     restart: always
     environment:
-      MYSQL_DATABASE: 'app-db'
+      MYSQL_DATABASE: 'user-db'
       # So you don't have to use root, but you can if you like
       MYSQL_USER: 'user'
       # You can use whatever password you like
-      MYSQL_PASSWORD: 'Personal@99490011'
+      MYSQL_PASSWORD: 'Personal@123456'
       # Password for root access
-      MYSQL_ROOT_PASSWORD: '99490011'
+      MYSQL_ROOT_USER: 'root'
+      MYSQL_ROOT_PASSWORD: '123456'
     ports:
       # <Port exposed> : < MySQL Port running inside container>
       - '3306:3306'
@@ -19,7 +20,35 @@ services:
       - '3306'
       # Where our data will be persisted
     volumes:
-      - my-db:/var/lib/mysql
+      - mysql-db:/var/lib/mysql
+
+  mongo:
+    image: mongo:latest
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: 'root'
+      MONGO_INITDB_ROOT_PASSWORD: '123456'
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-db:/data/db
+
+  mongo-express:
+    image: mongo-express:latest
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_BASICAUTH_USERNAME: 'user'
+      ME_CONFIG_BASICAUTH_PASSWORD: 'Personal@123456'
+      ME_CONFIG_MONGODB_PORT: 27017
+      ME_CONFIG_MONGODB_SERVER: 'mongo'
+      ME_CONFIG_MONGODB_ADMINUSERNAME: 'root'
+      ME_CONFIG_MONGODB_ADMINPASSWORD: '123456'
+    depends_on:
+      - mongo
+    links:
+      - mongo
+
 # Names our volume
 volumes:
-  my-db:
+  mysql-db:
+  mongo-db:
