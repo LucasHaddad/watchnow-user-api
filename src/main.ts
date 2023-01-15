@@ -1,8 +1,8 @@
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { AppModule } from '@/app/app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { config } from 'dotenv';
+import { AppModule } from './app/app.module';
 
 config();
 
